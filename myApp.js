@@ -1,6 +1,13 @@
 let express = require('express');
 let app = express();
 console.log("Hello World");
+
+//montando un middleware
+app.use(function(req,res,next){
+       console.log(req.method+" "+req.path+" - "+req.ip);
+       next();
+     });
+     
 //sirve archivo html
 app.get("/",
        function(req,res){
@@ -17,36 +24,22 @@ app.get("/json",
               res.json({"message":"Hello json"});
        });
 
+//Encadenando una funcion middleware
+
+app.get("/now",
+       function(req,res,next){
+         req.time=new Date().toString();
+         next();
+       },
+       function(req,res){
+         res.json({"time":req.time});
+       });
+//Entrada de parametros
+app.get("/:word/echo",
+       function(req,res){
+         res.json({"echo":req.params.word});
+       });
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- module.exports = app;
+       module.exports = app;
