@@ -1,4 +1,6 @@
 let express = require('express');
+var bodyparser =require("body-parser");
+
 let app = express();
 console.log("Hello World");
 
@@ -7,7 +9,8 @@ app.use(function(req,res,next){
        console.log(req.method+" "+req.path+" - "+req.ip);
        next();
      });
-     
+app.use(bodyparser.urlenencoded({extended:false}));
+
 //sirve archivo html
 app.get("/",
        function(req,res){
@@ -40,6 +43,17 @@ app.get("/:word/echo",
          res.json({"echo":req.params.word});
        });
 
+//Entrada de parametros de consulta
+app.get("/name",
+       function(req,res){
+         var first=req.query.first;
+         var last=req.query.last;
+
+         res.json({name: `${first} ${last}`});
+       });
+
+//analizando POST con bodyparser
+app.use(bodyparser.json());
 
 
        module.exports = app;
